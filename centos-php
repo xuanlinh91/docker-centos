@@ -1,0 +1,18 @@
+FROM xuanlinh/centos:latest
+
+LABEL maintainer="Nguyen Xuan Linh <xuanlinh91@gmail.com>"
+
+RUN yum update -y
+
+RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+
+RUN yum -y install php56w-fpm php56w-opcache
+RUN yum -y install php56w
+RUN yum -y install php56w-bcmath php56w-common php56w-devel php56w-gd php56w-imap php56w-intl php56w-ldap
+RUN yum -y install php56w-mbstring php56w-mcrypt
+RUN yum -y install php56w-mysqlnd php56w-pdo
+RUN yum -y install php56w-pear php56w-pecl-apcu php56w-pecl-gearman php56w-pecl-redis php56w-pecl-xdebug php56w-pecl-imagick php56w-xml php56w-soap php56w-pecl-geoip
+
+RUN yum clean all
+ENTRYPOINT ["systemctl", "start", "php-fpm"]
