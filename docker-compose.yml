@@ -1,0 +1,24 @@
+version: '3'
+services:
+  nginx:
+    # build:
+    #   context: .
+    #   dockerfile: centos-nginx
+    image: centos-nginx:latest
+    container_name: centos-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./code:/usr/share/nginx/html
+      # - ./site.conf:/etc/nginx/conf.d/default.conf
+
+  mariadb:
+    # build:
+    #   context: .
+    #   dockerfile: centos-mariadb
+    image: centos-mariadb:latest
+    container_name: centos-mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database:/var/lib/mysql

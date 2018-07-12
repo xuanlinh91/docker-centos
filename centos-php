@@ -1,18 +1,47 @@
-FROM xuanlinh/centos:latest
+FROM centos:centos7.4.1708
+MAINTAINER Nguyen Xuan Linh <xuanlinh91@gmail.com>
 
-LABEL maintainer="Nguyen Xuan Linh <xuanlinh91@gmail.com>"
-
+# -----------------------------------------------------------------------------
+# Import the RPM GPG keys for Repositories
+# -----------------------------------------------------------------------------
 RUN yum update -y
+RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 
-RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-RUN rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
-
-RUN yum -y install php56w-fpm php56w-opcache
-RUN yum -y install php56w
-RUN yum -y install php56w-bcmath php56w-common php56w-devel php56w-gd php56w-imap php56w-intl php56w-ldap
-RUN yum -y install php56w-mbstring php56w-mcrypt
-RUN yum -y install php56w-mysqlnd php56w-pdo
-RUN yum -y install php56w-pear php56w-pecl-apcu php56w-pecl-gearman php56w-pecl-redis php56w-pecl-xdebug php56w-pecl-imagick php56w-xml php56w-soap php56w-pecl-geoip
+# -----------------------------------------------------------------------------
+# Apache + (PHP 5.6 from https://webtatic.com)
+# -----------------------------------------------------------------------------
+RUN  yum --setopt=tsflags=nodocs -y update && \
+     yum --setopt=tsflags=nodocs -y install \
+        httpd \
+        php56w \
+        php56w-common \
+        php56w-devel \
+        php56w-mysql \
+	php56w-mbstring \
+	php56w-soap \
+	php56w-gd \
+        php56w-ldap \
+        php56w-mssql \
+        php56w-pear \
+        php56w-pdo \
+	php56w-intl \
+	php56w-xml \
+        php56w-pecl-xdebug \
+        libaio
 
 RUN yum clean all
-ENTRYPOINT ["systemctl", "start", "php-fpm"]
+
+
+RUN sed -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf
+
+# -----------------------------------------------------------------------------
+# Set ports and env variable HOME
+# -----------------------------------------------------------------------------
+EXPOSE 8080
+ENV HOME /var/www
+
+# -----------------------------------------------------------------------------
+# Start
+# -----------------------------------------------------------------------------
+CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
