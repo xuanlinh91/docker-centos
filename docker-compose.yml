@@ -8,9 +8,15 @@ services:
     container_name: centos-nginx
     ports:
       - "8080:80"
+    links:
+      - php
+    depends_on:
+      - php
+      - mariadb
+    # restart: on-failure
     volumes:
       - ./code:/usr/share/nginx/html
-      # - ./site.conf:/etc/nginx/conf.d/default.conf
+      - ./site.conf:/etc/nginx/conf.d/default.conf
 
   mariadb:
     # build:
@@ -18,7 +24,25 @@ services:
     #   dockerfile: centos-mariadb
     image: centos-mariadb:latest
     container_name: centos-mariadb
+    restart: on-failure
     ports:
       - "3306:3306"
     volumes:
       - ./database:/var/lib/mysql
+
+  php:
+    # build:
+    #   context: .
+    #   dockerfile: centos-mariadb
+    image: centos-php:latest
+    container_name: centos-php
+    restart: on-failure
+    ports:
+      - "9000:9000"
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    volumes:
+      - ./code:/var/www/html/public
+      # - ./www.conf:/etc/php-fpm.d/www.conf

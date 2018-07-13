@@ -1,8 +1,9 @@
 FROM centos:centos7.4.1708
-
+MAINTAINER Nguyen Xuan Linh <xuanlinh91@gmail.com>
 COPY mariadb.repo /etc/yum.repos.d/MariaDB.repo
 
 RUN yum -y update
 RUN yum -y install MariaDB-server MariaDB-client
+RUN yum clean all
 EXPOSE 3306
 CMD ["/usr/bin/mysqld_safe", "--skip-grant-tables"]

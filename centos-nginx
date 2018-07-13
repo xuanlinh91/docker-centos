@@ -1,9 +1,10 @@
 FROM centos:centos7.4.1708
-
+MAINTAINER Nguyen Xuan Linh <xuanlinh91@gmail.com>
 COPY nginx.repo /etc/yum.repos.d/nginx.repo
 
 RUN yum -y install epel-release
 RUN yum -y update
 RUN yum -y install nginx 1.14.0-1
+RUN yum clean all
 EXPOSE 80/tcp
 CMD ["nginx", "-g daemon off;"]
