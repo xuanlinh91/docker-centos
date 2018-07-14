@@ -15,4 +15,5 @@ RUN yum -y install php56w-pecl-gearman php56w-pecl-redis php56w-pecl-xdebug php5
 
 RUN yum clean all
 EXPOSE 9000
-ENTRYPOINT ["/usr/sbin/php-fpm", "--nodaemonize"]
+CMD ["php-fpm", "--nodaemonize"]
+#ENTRYPOINT ["php-fpm", "--nodaemonize"]
